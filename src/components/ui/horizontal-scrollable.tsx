@@ -4,7 +4,7 @@ import { cn } from '@/shared/utils/cn';
 import { useRef, useState } from 'react';
 import IconArrowTriangle from '@/shared/assets/icons/arrow-triangle.svg';
 
-const SCROLL_LEFT_DELTA = 50;
+const SCROLL_LEFT_DELTA = 70;
 
 type HorizontalScrollableProps = React.HTMLAttributes<HTMLDivElement> & {
   children: React.ReactNode;
@@ -79,7 +79,11 @@ export const HorizontalScrollable = ({
     }
 
     setisRightDisabled(false);
-    slider.scrollLeft -= SCROLL_LEFT_DELTA;
+    const newScrollLeft = slider.scrollLeft - SCROLL_LEFT_DELTA;
+    slider.scrollTo({
+      left: newScrollLeft,
+      behavior: 'smooth',
+    });
   };
 
   const scrollRight = () => {
@@ -93,7 +97,11 @@ export const HorizontalScrollable = ({
     }
 
     setisLeftDisabled(false);
-    slider.scrollLeft += SCROLL_LEFT_DELTA;
+    const newScrollLeft = slider.scrollLeft + SCROLL_LEFT_DELTA;
+    slider.scrollTo({
+      left: newScrollLeft,
+      behavior: 'smooth',
+    });
   };
 
   return (

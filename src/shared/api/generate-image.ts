@@ -2,12 +2,10 @@
 type generateImageParams = {
   model: string;
   prompt: string;
-  category: string;
-  tags: string[];
+  tags: Record<string, string[]> | null;
 };
 
 export const generateImage = async ({
-  category,
   model,
   prompt,
   tags,

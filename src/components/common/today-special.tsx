@@ -12,17 +12,19 @@ type TodaySpecialProps = {
   className?: string;
 };
 
+type TimerItemProps = {
+  time: number;
+  type: string;
+  isLast?: boolean;
+  disabled: boolean;
+};
+
 const TimerItem = ({
   time = 0,
   type = 'd',
   isLast = false,
   disabled,
-}: {
-  time: number;
-  type: string;
-  isLast?: boolean;
-  disabled: boolean;
-}) => {
+}: TimerItemProps) => {
   return (
     <>
       <div

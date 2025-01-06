@@ -1,73 +1,84 @@
 'use client';
 
 import { cn } from '@/shared/utils/cn';
-import { createContext, useContext, useState } from 'react';
+import { useState } from 'react';
 
 export interface RadioGroupOption {
   value: string;
   label: string;
+  icon?: React.ReactNode;
 }
 
-type CheckIsMultiple<T> = T extends RadioGroupOption
-  ? RadioGroupOption
-  : RadioGroupOption[];
-
 type RadioGroupProps = {
-  children: React.ReactNode;
   defaultValue?: RadioGroupOption;
   defaultValueMultiple?: RadioGroupOption[];
   multiple?: boolean;
   className?: string;
+  options: RadioGroupOption[];
+  optionClassName?: string;
+  variant?: 'outlined' | 'filled';
+  onChange?: (option: RadioGroupOption) => void;
 };
 type RadioGroupItemProps = {
   variant?: 'outlined' | 'filled';
   value: string;
   label: string;
-  onChange?: <T>(option: CheckIsMultiple<T>) => void;
+  onChange?: (option: RadioGroupOption) => void;
   icon?: React.ReactNode;
   className?: string;
+  selected: boolean;
 };
 
-const RadioGroupContext = createContext<{
-  selected: RadioGroupOption | undefined;
-  setSelected: React.Dispatch<
-    React.SetStateAction<RadioGroupOption | undefined>
-  >;
-  selectedMultiple: RadioGroupOption[];
-  setSelectedMultiple: React.Dispatch<React.SetStateAction<RadioGroupOption[]>>;
-  multiple?: boolean;
-}>({
-  selected: undefined,
-  setSelected: () => {},
-  selectedMultiple: [],
-  setSelectedMultiple: () => {},
-  multiple: false,
-});
-
 export const RadioGroup = ({
-  children,
   defaultValue,
   multiple,
   defaultValueMultiple,
   className,
+  options,
+  variant = 'filled',
+  optionClassName,
+  onChange,
 }: RadioGroupProps) => {
   const [selected, setSelected] = useState(defaultValue);
   const [selectedMultiple, setSelectedMultiple] = useState(
     defaultValueMultiple || []
   );
 
+  const handleChange = ({ label, value }: RadioGroupOption) => {
+    if (!multiple) {
+      onChange?.({ label, value });
+      setSelected({ label, value });
+      return;
+    }
+
+    if (selectedMultiple.map((item) => item.value).includes(value)) {
+      setSelectedMultiple((prev) =>
+        prev.filter((prevItem) => prevItem.value !== value)
+      );
+    } else {
+      setSelectedMultiple((prev) => [...prev, { label, value }]);
+    }
+    onChange?.({ label, value });
+  };
+
   return (
-    <RadioGroupContext
-      value={{
-        selected,
-        setSelected,
-        selectedMultiple,
-        setSelectedMultiple,
-        multiple,
-      }}
-    >
-      <div className={cn('flex gap-1 flex-wrap', className)}>{children}</div>
-    </RadioGroupContext>
+    <div className={cn('flex gap-1 flex-wrap', className)}>
+      {options.map((option) => (
+        <RadioGroupItem
+          onChange={handleChange}
+          label={option.label}
+          value={option.value}
+          key={option.value}
+          icon={option?.icon}
+          variant={variant}
+          selected={
+            selected?.value === option.value ||
+            selectedMultiple.map((item) => item.value).includes(option.value)
+          }
+          className={optionClassName}
+        />
+      ))}
+    </div>
   );
 };
 
@@ -77,26 +88,15 @@ export const RadioGroupItem = ({
   label,
   icon,
   className,
+  selected,
   onChange,
 }: RadioGroupItemProps) => {
-  const {
-    selected,
-    setSelected,
-    selectedMultiple,
-    setSelectedMultiple,
-    multiple,
-  } = useContext(RadioGroupContext);
-
-  const isSelected =
-    selected?.value === value ||
-    selectedMultiple.map((item) => item.value).includes(value);
-
   const variantClassname = {
     filled: `
       bg-ui-white-8 border-2 border-ui-violet-20 rounded-2xl hover:bg-ui-gray-900 active:bg-ui-dark-rose
       text-sm font-normal 
       ${
-        isSelected
+        selected
           ? 'bg-gradient-rose border-0 hover:bg-gradient-light-rose active:bg-none'
           : ''
       }
@@ -105,31 +105,11 @@ export const RadioGroupItem = ({
       bg-transparent border border-ui-violet-20 rounded-lg hover:bg-ui-gray-850 active:bg-ui-dark-rose
       text-base font-medium 
       ${
-        isSelected
+        selected
           ? 'bg-gradient-rose hover:bg-gradient-light-rose active:bg-none'
           : ''
       }
     `,
-  };
-
-  const handleChange = () => {
-    if (!multiple) {
-      onChange?.<RadioGroupOption>({ label, value });
-      setSelected({ label, value });
-      return;
-    }
-
-    setSelectedMultiple((prev) => {
-      if (prev.map((item) => item.value).includes(value)) {
-        onChange?.<RadioGroupOption[]>(
-          prev.filter((prevItem) => prevItem.value !== value)
-        );
-        return prev.filter((prevItem) => prevItem.value !== value);
-      }
-
-      onChange?.<RadioGroupOption[]>([...prev, { label, value }]);
-      return [...prev, { label, value }];
-    });
   };
 
   return (
@@ -139,11 +119,13 @@ export const RadioGroupItem = ({
         variantClassname[variant as keyof typeof variantClassname],
         className
       )}
-      onClick={handleChange}
+      onClick={() => onChange?.({ label, value })}
     >
-      <div className={cn('text-white', isSelected && 'text-ui-yellow')}>
-        {icon}
-      </div>
+      {icon && (
+        <div className={cn('text-white', selected && 'text-ui-yellow')}>
+          {icon}
+        </div>
+      )}
 
       {label}
     </button>

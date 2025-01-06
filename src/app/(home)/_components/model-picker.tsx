@@ -4,7 +4,6 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-  RadioGroupItem,
   RadioGroup,
   Typography,
   type RadioGroupOption,
@@ -32,16 +31,11 @@ export const ModelPicker = () => {
         <Typography variant="xl-bold">Model</Typography>
       </CollapsibleTrigger>
       <CollapsibleContent>
-        <RadioGroup defaultValue={MODELS[1]}>
-          {MODELS.map((model) => (
-            <RadioGroupItem
-              onChange={(option) => onModelChange(option as RadioGroupOption)}
-              label={model.label}
-              value={model.value}
-              key={model.value}
-            />
-          ))}
-        </RadioGroup>
+        <RadioGroup
+          defaultValue={MODELS[1]}
+          options={MODELS}
+          onChange={onModelChange}
+        />
       </CollapsibleContent>
     </Collapsible>
   );

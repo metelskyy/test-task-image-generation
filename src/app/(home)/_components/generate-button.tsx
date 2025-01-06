@@ -12,10 +12,7 @@ export const GenerateButton = ({
   children,
   ...props
 }: GenerateButtonProps) => {
-  const tagsLength = useGenerateImageStore(({ tags }) => tags.length);
-  const category = useGenerateImageStore(({ category }) => category);
-
-  const disabled = !category || tagsLength < 1;
+  const tags = useGenerateImageStore(({ tags }) => tags);
 
   return (
     <Button
@@ -23,7 +20,7 @@ export const GenerateButton = ({
       icon={<IconLightningFilled className="text-ui-gray-700" />}
       loading={loading}
       onClick={onClick}
-      disabled={disabled}
+      disabled={!tags}
       {...props}
     >
       {children}

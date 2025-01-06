@@ -5,3 +5,4 @@ export * from './radio-group';
 export * from './textarea';
 export * from './horizontal-scrollable';
 export * from './spinner';
+export * from './loading-container';

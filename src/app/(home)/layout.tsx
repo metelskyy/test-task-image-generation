@@ -49,7 +49,7 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${sfProDisplay.variable} antialiased font-sfProDisplay`}
       >
-        <div className="max-w-[1440px] mx-auto min-h-screen">{children}</div>
+        <div className="max-w-[1440px] mx-auto min-h-dvh">{children}</div>
       </body>
     </html>
   );

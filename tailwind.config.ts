@@ -3,6 +3,7 @@ import type { Config } from 'tailwindcss';
 export default {
   content: ['./src/**/*.{js,ts,jsx,tsx,mdx}'],
   theme: {
+    screens: { md: '769px' },
     extend: {
       colors: {
         'ui-rose': 'var(--color-rose)',
@@ -53,6 +54,9 @@ export default {
       animation: {
         swipeDown: 'swipeDown 0.3s ease-in-out',
         swipeUp: 'swipeUp 0.3s ease-in-out',
+      },
+      willChange: {
+        filter: 'filter',
       },
     },
     fontFamily: {

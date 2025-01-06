@@ -50,8 +50,7 @@ export const Textarea = ({
         placeholder={placeholder}
         className={cn(
           `font-sfProDisplay font-normal text-sm placeholder:font-sfProDisplay placeholder:font-normal placeholder:text-sm
-           placeholder:text-center placeholder:absolute placeholder:top-1/2 placeholder:left-1/2 placeholder:-translate-x-1/2
-           placeholder:-translate-y-1/2 placeholder:w-full no-scrollbar
+           placeholder:text-center placeholder:translate-y-10 placeholder:w-full no-scrollbar
           `,
           variantClassname[variant as keyof typeof variantClassname],
           className

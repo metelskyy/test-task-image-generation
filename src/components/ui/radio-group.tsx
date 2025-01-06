@@ -122,7 +122,7 @@ export const RadioGroupItem = ({
       onClick={() => onChange?.({ label, value })}
     >
       {icon && (
-        <div className={cn('text-white', selected && 'text-ui-yellow')}>
+        <div className={cn('text-ui-yellow', selected && 'text-white')}>
           {icon}
         </div>
       )}

@@ -4,15 +4,15 @@ import { DesktopPreview, MobilePreview, Settings } from './_components';
 
 export default function Home() {
   return (
-    <div className={cn('w-full flex min-h-screen overflow-hidden')}>
+    <div className={cn('w-full flex min-h-dvh overflow-hidden')}>
       <div
         className={cn(
-          'w-full md:max-w-[393px] flex flex-col relative z-[2] bg-transparent',
+          'w-full md:max-w-[393px] flex flex-col relative z-[2] bg-transparent will-change-filter',
           `after:content-["*"] after:bg-ui-violet-300 after:blur-[80px] after:rounded-[50%] after:h-[106px]
-         after:absolute after:z-0 after:-top-10 after:w-full md:after:w-[330px]
+         after:absolute after:z-0 after:-top-10 after:w-full md:after:w-[330px] after:will-change-filter
         `,
           `before:content-["*"] before:bg-ui-violet-300 before:blur-[80px] before:rounded-[50%] before:h-[106px]
-         before:absolute before:z-0 before:-bottom-28 before:w-full md:before:w-[330px]
+         before:absolute before:z-0 before:-bottom-28 before:w-full md:before:w-[330px] before:will-change-filter
         `
         )}
       >

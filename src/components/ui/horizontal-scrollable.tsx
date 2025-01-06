@@ -4,6 +4,8 @@ import { cn } from '@/shared/utils/cn';
 import { useRef, useState } from 'react';
 import IconArrowTriangle from '@/shared/assets/icons/arrow-triangle.svg';
 
+const SCROLL_LEFT_DELTA = 50;
+
 type HorizontalScrollableProps = React.HTMLAttributes<HTMLDivElement> & {
   children: React.ReactNode;
   ref?: React.RefObject<HTMLDivElement | null>;
@@ -22,6 +24,8 @@ export const HorizontalScrollable = ({
   ...props
 }: HorizontalScrollableProps) => {
   const [isMouseDown, setIsMouseDown] = useState(false);
+  const [isLeftDisabled, setisLeftDisabled] = useState(true);
+  const [isRightDisabled, setisRightDisabled] = useState(false);
   const mouseCoords = useRef({
     startX: 0,
     startY: 0,
@@ -64,25 +68,32 @@ export const HorizontalScrollable = ({
     }
   };
 
-  const scrollByButton = (direction: 'left' | 'right') => {
+  const scrollLeft = () => {
     if (!ref?.current) return;
-
     const slider = ref.current.children[0] as HTMLDivElement;
 
-    if (ref.current) {
-      slider.scrollBy({
-        left: direction === 'left' ? -150 : 150,
-        behavior: 'smooth',
-      });
+    if (slider.scrollLeft <= SCROLL_LEFT_DELTA) {
+      slider.scrollLeft = 0;
+      setisLeftDisabled(true);
+      return;
     }
 
-    if (
-      Math.floor(slider.scrollWidth - slider.scrollLeft) <= slider.offsetWidth
-    ) {
-      isScrollEnd?.(true);
-    } else {
-      isScrollEnd?.(false);
+    setisRightDisabled(false);
+    slider.scrollLeft -= SCROLL_LEFT_DELTA;
+  };
+
+  const scrollRight = () => {
+    if (!ref?.current) return;
+    const slider = ref.current.children[0] as HTMLDivElement;
+
+    if (slider.scrollLeft + slider.offsetWidth >= slider.scrollWidth) {
+      slider.scrollLeft = slider.scrollWidth - slider.offsetWidth;
+      setisRightDisabled(true);
+      return;
     }
+
+    setisLeftDisabled(false);
+    slider.scrollLeft += SCROLL_LEFT_DELTA;
   };
 
   return (
@@ -94,8 +105,9 @@ export const HorizontalScrollable = ({
     >
       {withButtons && (
         <button
-          onMouseDown={() => scrollByButton('left')}
-          className="w-10 flex items-center justify-center border-r border-r-ui-violet-20 shrink-0 text-white/50 hover:text-white hover:bg-ui-gray-700 transition-colors"
+          onMouseDown={scrollLeft}
+          className="w-10 flex items-center justify-center border-r border-r-ui-violet-20 shrink-0 text-white/50 hover:text-white hover:bg-ui-gray-700 transition-colors disabled:opacity-50 disabled:pointer-events-none"
+          disabled={isLeftDisabled}
         >
           <IconArrowTriangle className="rotate-180" />
         </button>
@@ -117,8 +129,9 @@ export const HorizontalScrollable = ({
 
       {withButtons && (
         <button
-          onMouseDown={() => scrollByButton('right')}
-          className="w-10 flex items-center justify-center border-l border-l-ui-violet-20 shrink-0 text-white/50 hover:text-white hover:bg-ui-gray-700 transition-colors"
+          onMouseDown={scrollRight}
+          className="w-10 flex items-center justify-center border-l border-l-ui-violet-20 shrink-0 text-white/50 hover:text-white hover:bg-ui-gray-700 transition-colors disabled:opacity-50 disabled:pointer-events-none"
+          disabled={isRightDisabled}
         >
           <IconArrowTriangle />
         </button>

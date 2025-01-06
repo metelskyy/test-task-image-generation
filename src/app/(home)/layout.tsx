@@ -1,7 +1,14 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import '../globals.css';
 import localFont from 'next/font/local';
 import { Inter } from 'next/font/google';
+
+export const viewport: Viewport = {
+  userScalable: false,
+  maximumScale: 1,
+  minimumScale: 1,
+  themeColor: '#131313',
+};
 
 export const metadata: Metadata = {
   title: 'Test task',

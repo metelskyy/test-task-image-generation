@@ -11,7 +11,7 @@ export const Header = ({ className, ...props }: HeaderProps) => {
   return (
     <header
       className={cn(
-        'bg-ui-gray-900 flex items-center justify-between w-full p-4 relative z-[2]',
+        'bg-ui-gray-800 flex items-center justify-between w-full p-4 relative z-[2]',
         className
       )}
       {...props}
